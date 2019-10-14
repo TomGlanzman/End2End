@@ -118,6 +118,8 @@ if __name__ == '__main__':
     #    parser.add_argument('-n','--nth',default=0,type=int,help='Desired visit, counting from beginning of sorted list (default=%(default)s)')
     parser.add_argument('-v','--version', action='version', version=__version__)
     parser.add_argument('-s','--simFileList',default=None,help='Name of sim file list file to produce (default = %(default)s)')
+    parser.add_argument('-p','--plots',action='store_true',default=False,help='Show plots')
+
     args = parser.parse_args()
 
     print('args = ',args)
@@ -134,6 +136,7 @@ if __name__ == '__main__':
     # Sim FITS file naming convention:     lsst_a_425529_R14_S00_y.fits
     fileList = []
     visitList = []
+    sensorList = {}
     tractList = tracts.split(',')
     print('tractList = ',tractList)
     
@@ -144,11 +147,13 @@ if __name__ == '__main__':
         n += 1
         row = list(rowz)
         viz = row[xvisit]
-        if row[xvisit] not in visitList:
+        if viz not in visitList:
             visitList.append(viz)
+            sensorList[viz] = []
             
         ## Construct sim file name
         rr,ss = d2rs(row[xdet])
+        sensorList[viz].append(rr+'_'+ss)
         file = 'lsst_a_'+str(viz)+'_'+rr+'_'+ss+'_'+str(row[xfilt])+'.fits'
         viz8 = f'{viz:08}'
         if viz < 445379:
@@ -182,6 +187,12 @@ if __name__ == '__main__':
     import matplotlib.mlab as mlab
     import matplotlib.pyplot as plt
 
+    sensorDist = []
+    for sensor in sensorList:
+        sensorDist.append(len(sensorList[sensor]))
+        pass
+    #print('sensorDist = ',sensorDist)
+    
     #mySQL = "select visit,detector,filter,patch,tract from overlaps where tract in ("+tracts+") order by visit,detector;"
     mySQL = "select visit,detector,filter,patch,tract from overlaps order by visit,detector;"
     myo.initDB()
@@ -205,7 +216,7 @@ if __name__ == '__main__':
         row=list(rw)
         #print(n, row)
         if row[0] != viz:
-            print(n," *********************************** New visit! ",row[0])
+            #print(n," *********************************** New visit! ",row[0])
             if nPatch != -1:
                 patchDist.append(nPatch)
                 patch2Dist.append(nPatch2)
@@ -231,42 +242,44 @@ if __name__ == '__main__':
         pass
 
     print('len(detDist) = ',len(detDist))
+    #print('detDist = ',detDist)
     print('len(patchDist) = ',len(patchDist))
-    print('max(patchDist) = ',max(patchDist))
     print('min(patchDist) = ',min(patchDist))
-    print('detDist = ',detDist)
-    print('patch2Dist = ',patch2Dist)
+    print('max(patchDist) = ',max(patchDist))
+    #print('patch2Dist = ',patch2Dist)
     print('len(patch2Dist) = ',len(patch2Dist))
-    print('max(patch2Dist) = ',max(patch2Dist))
     print('min(patch2Dist) = ',min(patch2Dist))
-    #print('patchDist = ',patchDist)
+    print('max(patch2Dist) = ',max(patch2Dist))
 
-    #sys.exit()
 
-    fig,axs = plt.subplots(1,3,tight_layout=True)
-    #    print('fig = ',fig)
-    #    print('dir(fig) = ',dir(fig))
-    #    print('axs = ',axs)
-    #    print('dir(axs) = ',dir(axs))
-    #    print('axs[0].xaxis.label = ',axs[0].xaxis.label)
-    #    print('dir(axs[0].xaxis.label) = ',dir(axs[0].xaxis.label))
-    axs[0].hist(detDist,bins=10,range=(180,190),align='left')
-    axs[0].set_xlabel('Sensors per Visit')
-    axs[0].set_ylabel('Frequency')
-    axs[0].grid(True)
-    #axs[0].title('Sensors per Visit')
+    ## Produce plots
+    if args.plots:
+        fig,axs = plt.subplots(1,2,tight_layout=True)
+        axs[0].hist(detDist,bins=10,range=(1,190),align='left')
+        axs[0].set_xlabel('Sensors per Visit (full list)')
+        axs[0].set_ylabel('Frequency')
+        axs[0].grid(True)
+        #axs[0].title('Sensors per Visit')
+
+        axs[1].hist(sensorDist,bins=10,range=(1,190),align='left')
+        axs[1].set_xlabel('Sensors per Visit (tract selection)')
+        axs[1].set_ylabel('Frequency')
+        axs[1].grid(True)
+        #axs[0].title('Sensors per Visit')
+
+        # axs[1].hist(patchDist,bins=6,range=(4,10),align='left')
+        # axs[1].set_xlabel('Patches per Sensor')
+        # axs[1].set_ylabel('Frequency')
+        # #axs[1].ticklabel_format(style='sci',scilimits=(0,0),axis='y')
+        # #axs[1].title('Patches per Sensor')
+
+        # axs[2].hist(patch2Dist,bins=50,range=(800,1200),align='left')
+        # axs[2].set_xlabel('DB entries per Visit')
+        # axs[2].set_ylabel('Frequency')
+        # #axs[2].title('Patches per visit')
+
+        plt.show()
+        pass
     
-    axs[1].hist(patchDist,bins=6,range=(4,10),align='left')
-    axs[1].set_xlabel('Patches per Sensor')
-    axs[1].set_ylabel('Frequency')
-    #axs[1].ticklabel_format(style='sci',scilimits=(0,0),axis='y')
-    #axs[1].title('Patches per Sensor')
-
-    axs[2].hist(patch2Dist,bins=50,range=(800,1200),align='left')
-    axs[2].set_xlabel('DB entries per Visit')
-    axs[2].set_ylabel('Frequency')
-    #axs[2].title('Patches per visit')
-
-    plt.show()
     sys.exit()
     
