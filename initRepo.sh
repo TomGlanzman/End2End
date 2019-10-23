@@ -12,7 +12,7 @@ echo `date`"  Entering initRepo.sh"
 PWDSAVE=$PWD
 
 ##### Initialize output repo (but only once!)
-if [ ! -d ${PT_REPODIR} ]; then
+###if [ ! -d ${PT_REPODIR} ]; then
     mkdir ${PT_REPODIR}
     cd ${PT_REPODIR}
 
@@ -43,10 +43,10 @@ if [ ! -d ${PT_REPODIR} ]; then
     echo "[rc = "$?"]"
 
     cd $PWDSAVE    # return to original directory
-else
-    echo "%ALERT: the requested repo directory already exists.  No action taken"
-    echo ${PT_REPODIR}
-fi
+# else
+#     echo "%ALERT: the requested repo directory already exists.  No action taken"
+#     echo ${PT_REPODIR}
+# fi
 
 
 echo `date`"  Exiting initRepo.sh"

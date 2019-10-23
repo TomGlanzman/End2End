@@ -111,14 +111,16 @@ if __name__ == '__main__':
 
     ## Define defaults
     defaultFile = 'tract2visit.db'
+    defsimpre = '/global/projecta/projectdirs/lsst/production/DC2_ImSim/Run2.1.1i/sim/agn-test'
+
     
     ## Parse command line arguments
     parser = argparse.ArgumentParser(description='Generate sim file list based on tract overlap')
     parser.add_argument('-o','--overlapsFile',default=defaultFile,help='Name of overlap db file (default = %(default)s)')
-    #    parser.add_argument('-n','--nth',default=0,type=int,help='Desired visit, counting from beginning of sorted list (default=%(default)s)')
     parser.add_argument('-v','--version', action='version', version=__version__)
     parser.add_argument('-s','--simFileList',default=None,help='Name of sim file list file to produce (default = %(default)s)')
     parser.add_argument('-p','--plots',action='store_true',default=False,help='Show plots')
+    parser.add_argument('-P','--Prefix',default=defsimpre,help='Path prefix to raw image files (default=%(default)s)')
 
     args = parser.parse_args()
 
@@ -142,7 +144,7 @@ if __name__ == '__main__':
     
     ## Summarize data
     n = 0
-    simpre='/global/projecta/projectdirs/lsst/production/DC2_ImSim/Run2.1.1i/sim/agn-test'
+    simpre=args.Prefix
     for rowz in rows:
         n += 1
         row = list(rowz)
