@@ -1,13 +1,14 @@
+# Create symlinks between i-band flat calib files and flats for ugrzy bands.
+#
+#  Revised 30 Oct 2019 - TG
+
+# Script must be executed from 'CALIB' directory
+# symlinks are *RELATIVE* so that the CALIB directory is relocatable
+#  Note this requires intimate knowledge of the DM file structure
+
 import os
 import glob
 import sqlite3
-
-
-
-# Create symlinks between i-band flat calib files and flats for ugrzy bands.
-# Script must be executed from 'CALIB' directory
-# symlinks are *RELATIVE* so that the CALIB directory is relocatable
-#  Note this implies knowledge of the DM file structure
 
 calib_dir = os.path.abspath('.')
 iband_flats = sorted(glob.glob(os.path.join(calib_dir, 'flat', 'i',
