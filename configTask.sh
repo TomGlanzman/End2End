@@ -32,23 +32,31 @@ export PT_OUTPUTDIR=$PT_SCRATCH
 ##      PT_DEBUG is a global flag for workflow development & debugging
 export PT_DEBUG=False
 
+##     PT_REPODIR is the location of DM data repository
+export PT_REPODIR=${PT_OUTPUTDIR}'/tomTest/end2endr'   # Repo for end-to-end tests
 
 #####################################################
 ###########  One-time Setup
 #####################################################
 
-### The following values are required to establish a working DM-style
-### repository
+### The following values are required to create a working DM-style
+### repository (used the initRepo.sh script)
 
-##     PT_CALIBS points to a "CALIB" tar ball to populate the repository (is this needed??)
-export PT_CALIBS='/global/projecta/projectdirs/lsst/production/DC2_ImSim/Run1.2i/CALIB/CALIB_Run1.2i.tar.gz'
+##     PT_CALIBS, PT_REFCAT and PT_BFKERNELS point to calibration products needed by the repo
+#export PT_CALIBS='/global/projecta/projectdirs/lsst/production/DC2_ImSim/Run2.1i/CALIB/CALIB_run2-1i-v1.tar.gz'
+export PT_CALIBS='/global/cscratch1/sd/descdm/tomTest/tmp/CALIB.tar.gz'
 
-##     PT_REPODIR is the location of output repository
-export PT_REPODIR=${PT_OUTPUTDIR}'/tomTest/end2end'   # Repo for end-to-end tests
+export PT_REFCAT='/global/projecta/projectdirs/lsst/production/DC2_ImSim/Run2.1i/ref_cats/ref_cat-v3/dc2_run2.1i_ref_cats_190513-v3.tar'
 
-##     PT_INGEST is the file containing a list of all simulated image files to ingest
+export PT_BFKERNELS='/global/projecta/projectdirs/lsst/production/DC2_ImSim/Run2.1i/CALIB/bfkernels-v1/calibrations'
+
+##     PT_INGEST is the (local) file containing a list of all simulated image files to ingest
 ##               Note: this file must reside in the workflow top-level directory
 export PT_INGEST=ingestFileList.txt
+
+
+
+
 
 
 
